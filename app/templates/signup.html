@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+
+    {% block content %}
+
+    <div>
+        <div>
+            <h3>We'll need some information to get started</h3>
+        </div>
+        <br>
+        <div class="container">
+            <form action="" method="POST">
+                {{ form.hidden_tag() }}
+                <div>
+                    <fieldset>
+                        {{ form.first_name.label }}
+                        {{ form.first_name(class="form-control", placeholder="First Name") }}
+                    
+                    <br>
+                    
+                        {{ form.last_name.label }}
+                        {{ form.last_name(class="form-control", placeholder="Last Name") }}
+                    
+                    <br>
+                    
+                        {{ form.phone.label }}
+                        {{ form.phone(class="form-control", placeholder="(xxx) xxx-xxxx") }}
+                    
+                    <br>
+                    
+                        {{ form.email.label }}
+                        {{ form.email(class="form-control", placeholder="Email") }}
+                    
+                    <br>
+                    
+                        {{ form.username.label }}
+                        {{ form.username(class="form-control", placeholder="Username") }}
+                    
+                    <br>
+                
+                        {{ form.password.label }}
+                        {{ form.password(class="form-control", placeholder="Password") }}
+                    
+                    <br>
+                
+                        {{ form.confirm_pass.label }}
+                        {{ form.confirm_pass(class="form-control", placeholder="Confirm Password") }}
+                    </fieldset>
+                    <br>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    {% endblock content %}

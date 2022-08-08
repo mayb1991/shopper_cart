@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+
+    {% block content %}
+
+    <div id="login">
+        <div class="container">
+            <h1>Login</h1>
+        </div>
+        <div class="container">
+            <form action="" method="POST">
+                {{ form.hidden_tag() }}
+                <div>
+                    <fieldset>
+                        {{ form.username.label }}
+                        {{ form.username(class="form-control") }}
+                    
+                    <br>
+                
+                        {{ form.password.label }}
+                        {{ form.password(class="form-control") }}
+                    
+                    <br>
+                
+                        {{ form.remember_me(class="form-check-input") }}
+                        {{ form.remember_me.label(class="form-check-label") }}
+                    </fieldset>
+                    <br>
+                    {{ form.submit(class='btn btn-primary') }}
+                    <br>
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    {% endblock content %}

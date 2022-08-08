@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+    {% block content %}
+
+    <div class="container">
+        <div class="heading">
+            <h4>My Cart</h4>
+        </div>
+        {% for item in items %}
+        <div class="container">
+            <img src="{{ item.product_br.image_url }}" alt="{{ item.product_br.name }}">
+            <div class='cart-item-name'><h4><a href="{{ url_for('product_detail', product_id=item.product_id) }}">
+                {{ item.product_br.name }}</a></h4></div>
+            <div><p>${{ item.product_br.price }}</p></div>
+            <div class='cart-item-btn'>
+                <a href="{{ url_for('remove_from_cart', item_id=item.id) }}" 
+                class="btn-close">Remove Item From Cart</a>
+
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+        <br>
+        <h5>Total: ${{ total }}</h5>
+    </div>
+
+
+    {% endblock content %}

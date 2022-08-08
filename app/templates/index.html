@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+                <div>
+                    <h1>Welcome to The Rocky Mountian Outdoor Store</h1>
+                    <h3>Home of all your outdoor grilling needs</h3>
+                    <a class='btn btn-primary' href="{{ url_for('signup') }}">Sign Up Today!</a>
+                </div>
+<div class="container">
+    <div class="container">
+        {% for product in products %}
+        <div id="home_page_products">
+            <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                <div class='img-wrapper'><img src="{{ product.image_url }}" alt="" width="350"></div>
+            </a>
+            <div>
+                    {{ product.name }} -
+                    {{ product.description }} -
+                    ${{ product.price }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
