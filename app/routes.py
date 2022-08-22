@@ -173,24 +173,23 @@ def apiProducts():
         'products': shopping_items
     }
 
-@app.route('/api/product_info/<int:item_id>')
-def getProductInfoAPI(item_id):
-    item = Product.query.filter_by(id=item_id).first()
-    if item:
+@app.route('/api/product_info/<int:product_id>')
+def getProductInfoAPI(product_id):
+    product = Product.query.filter_by(id=product_id).first()
+    if product:
         return {
             'status': 'ok',
             'total_results': 1,
-            "item": item.to_dict()
+            "item": product.to_dict()
             }
     else:
         return {
             'status': 'not ok',
-            'message': f"An item with the id : {item.id} does not exist."
+            'message': f"An item with the id : {product.id} does not exist."
         }
 
 @app.route('/api/cart/add', methods=["POST"])
 def addToCartAPI(user):
-    try:
         data = request.json
         name=data['name']
         item = Product.query.filter_by(name=name).first()
@@ -204,11 +203,6 @@ def addToCartAPI(user):
         return {
             'status': 'ok',
             'message': "Succesfully added to cart."
-        }
-    except:
-        return {
-            'status': 'not ok',
-            'message': "Not succesful."
         }
 
 
