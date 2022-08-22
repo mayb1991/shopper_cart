@@ -1,3 +1,4 @@
+from secrets import token_hex
 from app import db, login
 from werkzeug.security import generate_password_hash
 from datetime import datetime
@@ -17,6 +18,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(256), nullable=False)
     user_cart = db.relationship('Cart', backref='user_br', lazy=True)
+    apitoken = db.Column(db.String, default=None, nullable=True)
 
     
     def __init__(self, first_name, last_name, username, phone, email, password):
@@ -26,6 +28,15 @@ class User(db.Model, UserMixin):
         self.phone = phone
         self.email = email
         self.password = generate_password_hash(password)
+        self.apitoken = token_hex(16)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'token': self.apitoken
+        }
 
 
 class Product(db.Model):

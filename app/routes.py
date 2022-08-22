@@ -5,7 +5,6 @@ from app.models import User, Product, Cart
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
 
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -98,3 +97,131 @@ def logout():
     logout_user()
     flash("You have successfully logged out", 'primary')
     return redirect(url_for('index'))
+
+
+
+# ======================API ROUTES================================
+from api_auth_helper import basic_auth
+
+@app.route('/token', methods=['POST'])
+@basic_auth.login_required
+def getToken():
+    user = basic_auth.current_user()
+    return {
+                'status': 'ok',
+                'message': "You have successfully logged in",
+                'data':  user.to_dict()
+            }
+
+@app.route('/api/signup', methods=["POST"])
+def apiSignMeUp():
+    data = request.json
+     
+    username = data['username']
+    email = data['email']
+    password = data['password']
+
+    # add user to database
+    user = User(username, email, password)
+
+    # add instance to our db
+    db.session.add(user)
+    db.session.commit()
+    return {
+        'status': 'ok',
+        'message': f"Successfully created user {username}"
+    }
+
+
+@app.route('/api/login', methods=["POST"])
+def apiLogMeIn():
+    data = request.json
+    print(data)
+
+    username = data['username']
+    password = data['password']
+
+    user = User.query.filter_by(username=username).first()
+
+    if user:
+        # check password
+        if check_password_hash(user.password, password):
+            return {
+                'status': 'ok',
+                'message': "You have successfully logged in",
+                'data':  user.to_dict()
+            }
+        return {
+            'status': 'not ok',
+            'message': "Incorrect password."
+        }
+    return {
+        'status': 'not ok',
+        'message': 'Invalid username.'
+    }
+
+@app.route('/api/products')
+def apiProducts():
+    products = Product.query.all()
+    shopping_items = [s.to_dict() for s in shopping_items]
+    return {
+        "status": "ok",
+        "total_results": len(products),
+        'products': shopping_items
+    }
+
+@app.route('/api/product_info/<int:item_id>')
+def getProductInfoAPI(item_id):
+    item = Product.query.filter_by(id=item_id).first()
+    if item:
+        return {
+            'status': 'ok',
+            'total_results': 1,
+            "item": item.to_dict()
+            }
+    else:
+        return {
+            'status': 'not ok',
+            'message': f"An item with the id : {item.id} does not exist."
+        }
+
+@app.route('/api/cart/add', methods=["POST"])
+def addToCartAPI(user):
+    try:
+        data = request.json
+        name=data['name']
+        item = Product.query.filter_by(name=name).first()
+        print(item.id)
+        print(user.id)
+        x = Cart(user.id, item.id)
+        print(x)
+        db.session.add(x)
+        db.session.commit()
+        
+        return {
+            'status': 'ok',
+            'message': "Succesfully added to cart."
+        }
+    except:
+        return {
+            'status': 'not ok',
+            'message': "Not succesful."
+        }
+
+
+@app.route('/api/cart')
+
+def getCartAPI(user):
+ 
+    cart = Cart.query.filter_by(user_id=user.id).all()
+    print(cart)
+    cart_items = [s.to_dict() for s in cart]
+    items_lst = []
+    qty = 0
+    for each in cart:
+        item = Product.query.get(each.product_id)
+        items_lst.append(item)
+    cart_items = [s.to_dict() for s in items_lst]
+    if cart_items:
+    
+        return {'status': 'ok', 'total_results': len(cart), "items": cart_items}
