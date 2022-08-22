@@ -57,6 +57,16 @@ class Product(db.Model):
         self.description = description
         self.image_url = image_url
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "category": self.category,
+            "description": self.description,
+            "image_url": self.image_url,
+        }
+
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)

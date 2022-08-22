@@ -113,16 +113,19 @@ def getToken():
                 'data':  user.to_dict()
             }
 
-@app.route('/api/signup', methods=["POST"])
+@app.route('/api/signup', methods=["POST", "GET"])
 def apiSignMeUp():
     data = request.json
-     
+    print("got it!!")
+    first_name = data['firstName']
+    last_name = data['lastName']
     username = data['username']
+    phone = data['phoneNumber']
     email = data['email']
     password = data['password']
 
     # add user to database
-    user = User(username, email, password)
+    user = User(first_name,last_name,username,phone,email,password)
 
     # add instance to our db
     db.session.add(user)
@@ -163,7 +166,7 @@ def apiLogMeIn():
 @app.route('/api/products')
 def apiProducts():
     products = Product.query.all()
-    shopping_items = [s.to_dict() for s in shopping_items]
+    shopping_items = [s.to_dict() for s in products]
     return {
         "status": "ok",
         "total_results": len(products),
